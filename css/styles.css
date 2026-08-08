@@ -1,0 +1,13 @@
+.pandamusrex-tiesandtails-success {
+    border: 2px solid green;
+    padding: 8px;
+    color: green;
+    font-weight: bold;
+}
+
+.pandamusrex-tiesandtails-error {
+    border: 2px solid red;
+    padding: 8px;
+    color: red;
+    font-weight: bold;
+}
