@@ -50,7 +50,7 @@ class PandamusRex_TiesAndTails_Member_Form {
     public function enqueue_scripts() {
         wp_enqueue_script(
             'pandamusrex-memberships-my-account-form',
-            plugin_dir_url( __FILE__ ) . 'js/pandamusrex-tiesandtails-members-form.js',
+            plugin_dir_url( __FILE__ ) . 'js/pandamusrex-tiesandtails-member-form.js',
             ['jquery'],
             '1.0.0',
             false
