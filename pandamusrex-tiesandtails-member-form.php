@@ -39,31 +39,85 @@ class PandamusRex_TiesAndTails_Member_Form {
     public function __wakeup() {}
 
     public function __construct() {
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_my_account_scripts' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_checkout_scripts' ] );
         add_action( 'woocommerce_account_memberships-tab_endpoint', [ $this, 'memberships_my_account_tab_content' ], 11 );
+        add_action( 'woocommerce_after_checkout_form', [ $this, 'memberships_checkout_content' ] );
     }
 
-    public function memberships_my_account_tab_content() {
-        self::render_membership_form_for_my_account();
-    }
+    public function enqueue_my_account_scripts() {
+        if ( ! function_exists( 'is_wc_endpoint_url' ) ) {
+            return;
+        }
 
-    public function enqueue_scripts() {
+        // if ( ! is_wc_endpoint_url( 'memberships-tab' ) ) {
+        //     return;
+        // }
+
         wp_enqueue_script(
-            'pandamusrex-memberships-my-account-form',
-            plugin_dir_url( __FILE__ ) . 'js/pandamusrex-tiesandtails-member-form.js',
-            ['jquery'],
+            'pandamusrex-tat-my-account-form',
+            plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-my-account-form.js',
+            [ 'jquery' ],
             '1.0.0',
             false
         );
 
         wp_enqueue_style(
             'pandamusrex-tiesandtails-styles',
-            plugin_dir_url( __FILE__ ) . 'css/styles.css'
+            plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-common.css'
         );
     }
 
-    public static function render_membership_form_for_my_account() {
-        $form_elements = [
+    public function enqueue_checkout_scripts() {
+        if ( ! function_exists( 'is_checkout' ) ) {
+            return;
+        }
+
+        // if ( ! is_checkout() ) {
+        //     return;
+        // }
+
+        wp_enqueue_script( 'jquery-ui-dialog' );
+
+        // https://wordpress.stackexchange.com/questions/274610/adding-jquery-ui-elements-to-wordpress-page
+        // Access the wp_scripts global to get the jquery-ui-core version used.
+        global $wp_scripts;
+        $ver = $wp_scripts->registered['jquery-ui-core']->ver;
+        $handle = 'jquery-ui';
+
+        // Path to stylesheet, based on the jquery-ui-core version used in core.
+        $src = "https://ajax.googleapis.com/ajax/libs/jqueryui/{$ver}/themes/smoothness/{$handle}.css";
+
+        // Register the stylesheet handle and enqueue it
+        wp_register_style( $handle, $src, [], $ver );
+        wp_enqueue_style( 'jquery-ui' );
+
+        wp_enqueue_script(
+            'pandamusrex-tat-checkout-form',
+            plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-checkout-form.js',
+            [ 'jquery' ],
+            '1.0.0',
+            false
+        );
+
+        wp_enqueue_style(
+            'pandamusrex-tiesandtails-styles',
+            plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-checkout-form.css'
+        );
+    }
+
+    public function memberships_my_account_tab_content() {
+        self::render_membership_form_for_my_account();
+    }
+
+    public function memberships_checkout_content() {
+        echo "<div id='tat-terms-modal' title='Membership Terms and Conditions'>";
+        self::render_membership_form_for_checkout();
+        echo "</div>";
+    }
+
+    public static function get_form_elements() {
+        return [
             [
                 'type' => 'heading',
                 'text' => 'Hey everyone, welcome to the Club!'
@@ -177,6 +231,7 @@ class PandamusRex_TiesAndTails_Member_Form {
                 'label' => 'I am not currently banned from any conventions or gatherings (furry or otherwise).',
                 'user_meta_key' => 'tat_no_bans'
             ],
+/*
             [
                 'type' => 'heading',
                 'text' => 'Membership Information'
@@ -256,15 +311,13 @@ class PandamusRex_TiesAndTails_Member_Form {
                 'type' => 'checkbox',
                 'label' => 'New - Club Shop Listings',
                 'user_meta_key' => 'tat_shop_emails_ok'
-            ],
-            [
-                'type' => 'bodytext',
-                'text' =>  [
-                    'Once you hit Submit you\'re all done!',
-                ]
             ]
+*/
         ];
+    }
 
+    public static function render_membership_form_for_my_account() {
+        $form_elements = self::get_form_elements();
         $current_user_id = get_current_user_id();
         $things_that_need_fixing = [];
 
@@ -377,9 +430,18 @@ class PandamusRex_TiesAndTails_Member_Form {
             }
         }
 
-        // Always render the form
-        echo "<form method='post'>";
+        self::render_form_elements();
+    }
 
+    public static function render_membership_form_for_checkout() {
+        // TODO set a class to prompt JS to manage checking and POST
+        self::render_form_elements( [ 'omit-submit-button' ] );
+    }
+
+    public static function render_form_elements( $options = [] ) {
+        $form_elements = self::get_form_elements();
+
+        echo "<form method='post'>";
         echo '<input type="hidden" name="pandamusrex_memberships_member_form_nonce" id="pandamusrex_memberships_member_form_nonce" value="' . esc_attr( wp_create_nonce( 'pandamusrex_memberships_member_form_nonce' ) ) . '" />';
 
         // Render form contents
@@ -507,7 +569,12 @@ class PandamusRex_TiesAndTails_Member_Form {
             }
         }
 
-        echo "<input type='submit' id='pandamusrex_memberships_membership_form_submit' value='Submit'>";
+        if ( ! in_array( 'omit-submit-button', $options ) ) {
+            echo "<p>";
+            echo "Once you hit Submit you\'re all done!";
+            echo "</p>";
+            echo "<input type='submit' id='pandamusrex_memberships_membership_form_submit' value='Submit'>";
+        }
 
         echo "</form>";
     }

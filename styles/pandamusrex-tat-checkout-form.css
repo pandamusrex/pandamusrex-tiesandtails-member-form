@@ -1,0 +1,15 @@
+.ui-dialog {
+    max-width: 95% !important;
+    max-height: 95% !important;
+    box-sizing: border-box;
+}
+
+/* Ensure the inner scrollable content updates cleanly */
+.ui-dialog .ui-dialog-content {
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    display: none;
+}
