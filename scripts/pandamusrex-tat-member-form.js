@@ -1,7 +1,27 @@
 jQuery( document ).ready( function( $ ) {
-    console.log( "TiesAndTails Checkout Form Helper. DOM is fully loaded and ready!" );
+    console.log( "TiesAndTails Member Form Helper. DOM is fully loaded and ready!" );
 
     var $dialog = $('#tat-terms-modal');
+
+    function update_submit_button_state() {
+        $all_checkboxes_checked = true;
+
+        $( '#tat-terms-modal input[type="checkbox"]' ).each( function() {
+            if ( ! $( this ).is( ':checked' ) ) {
+                $all_checkboxes_checked = false;
+            }
+        } );
+
+        if ( $all_checkboxes_checked ) {
+            $('#tat-terms-submit').button("enable");
+        } else {
+            $('#tat-terms-submit').button("disable");
+        }
+    }
+
+    $( '#tat-terms-modal input[type="checkbox"]' ).on( 'click', function() {
+        update_submit_button_state();
+    } );
 
     $dialog.dialog( {
         autoOpen: true,
@@ -13,18 +33,24 @@ jQuery( document ).ready( function( $ ) {
         },
         resizable: false,
         draggable: false,
-        buttons: {
-            "Confirm": function() {
-                alert("Action Confirmed!");
-                $(this).dialog("close");
+        buttons: [
+            {
+                text: "Submit",
+                id: "tat-terms-submit",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
             }
-        },
+        ],
         open: function() {
             // Hide body scrollbars when the dialog opens
             $( "body" ).css( "overflow", "hidden" );
 
             // Scroll the content to the top
             $(this).scrollTop(0);
+
+            // Disable the button for starters
+            update_submit_button_state();
         },
         close: function() {
             // Restore body scrollbars when the dialog closes
@@ -43,6 +69,7 @@ jQuery( document ).ready( function( $ ) {
         return $( window ).height() * 0.85;
     }
 
+    // https://stackoverflow.com/questions/9879571/how-to-resize-jquery-ui-dialog-with-browser
     $( window ) .on( "resize", function() {
         if ( $dialog.dialog( "isOpen" ) ) {
             $dialog.dialog( "option", {
@@ -52,9 +79,4 @@ jQuery( document ).ready( function( $ ) {
             } );
         }
     } );
-
-
 } );
-
-// https://stackoverflow.com/questions/9879571/how-to-resize-jquery-ui-dialog-with-browser
-

@@ -13,3 +13,17 @@
 .ui-dialog .ui-dialog-titlebar-close {
     display: none;
 }
+
+.pandamusrex-tiesandtails-member-form-success {
+    border: 2px solid green;
+    padding: 8px;
+    color: green;
+    font-weight: bold;
+}
+
+.pandamusrex-tiesandtails-member-form-error {
+    border: 2px solid red;
+    padding: 8px;
+    color: red;
+    font-weight: bold;
+}

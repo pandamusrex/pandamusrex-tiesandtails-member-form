@@ -39,33 +39,8 @@ class PandamusRex_TiesAndTails_Member_Form {
     public function __wakeup() {}
 
     public function __construct() {
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_my_account_scripts' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_checkout_scripts' ] );
-        add_action( 'woocommerce_account_memberships-tab_endpoint', [ $this, 'memberships_my_account_tab_content' ], 11 );
         add_action( 'woocommerce_after_checkout_form', [ $this, 'memberships_checkout_content' ] );
-    }
-
-    public function enqueue_my_account_scripts() {
-        if ( ! function_exists( 'is_wc_endpoint_url' ) ) {
-            return;
-        }
-
-        // if ( ! is_wc_endpoint_url( 'memberships-tab' ) ) {
-        //     return;
-        // }
-
-        wp_enqueue_script(
-            'pandamusrex-tat-my-account-form',
-            plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-my-account-form.js',
-            [ 'jquery' ],
-            '1.0.0',
-            false
-        );
-
-        wp_enqueue_style(
-            'pandamusrex-tiesandtails-styles',
-            plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-common.css'
-        );
     }
 
     public function enqueue_checkout_scripts() {
@@ -93,21 +68,17 @@ class PandamusRex_TiesAndTails_Member_Form {
         wp_enqueue_style( 'jquery-ui' );
 
         wp_enqueue_script(
-            'pandamusrex-tat-checkout-form',
-            plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-checkout-form.js',
+            'pandamusrex-tat-member-form',
+            plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-member-form.js',
             [ 'jquery' ],
             '1.0.0',
             false
         );
 
         wp_enqueue_style(
-            'pandamusrex-tiesandtails-styles',
-            plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-checkout-form.css'
+            'pandamusrex-tat-member-form-styles',
+            plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-member-form.css'
         );
-    }
-
-    public function memberships_my_account_tab_content() {
-        self::render_membership_form_for_my_account();
     }
 
     public function memberships_checkout_content() {
@@ -230,215 +201,11 @@ class PandamusRex_TiesAndTails_Member_Form {
                 'required' => TRUE,
                 'label' => 'I am not currently banned from any conventions or gatherings (furry or otherwise).',
                 'user_meta_key' => 'tat_no_bans'
-            ],
-/*
-            [
-                'type' => 'heading',
-                'text' => 'Membership Information'
-            ],
-            [
-                'type' => 'bodytext',
-                'text' =>  [
-                    'Next up, we\'re going to gather your info for our database.',
-                    'We will never sell this data, nor make it public. We are a private social group.',
-                ]
-            ],
-            [
-                'type' => 'text',
-                'label' => 'Legal First Name',
-                'required' => TRUE,
-                'user_meta_key' => 'tat_legal_first_name'
-            ],
-            [
-                'type' => 'text',
-                'label' => 'Legal Last Name',
-                'required' => TRUE,
-                'user_meta_key' => 'tat_legal_last_name'
-            ],
-            [
-                'type' => 'text',
-                'label' => 'Fursona Name',
-                'required' => TRUE,
-                'user_meta_key' => 'tat_fursona_name'
-            ],
-            [
-                'type' => 'radiobutton',
-                'label' => 'Would you prefer your Fursona Name to be used in Club e-mails?',
-                'values' => [
-                    'Yes',
-                    'No'
-                ],
-                'user_meta_key' => 'tat_use_fursona_name_in_club_emails'
-            ],
-            [
-                'type' => 'bodytext',
-                'text' =>  [
-                    'Email',
-                    'This is super important.',
-                    'This email address will be used to send you legally mandated notifications like upcoming votes on vacant Board seats or other issues that we\'re required, by law, to inform you of.',
-                    'Please make sure this email address is monitored.',
-                    'You may want to allow-list the TiesAndTails.Club  domain and the alternate email: TiesAndTailsClub@gmail.com',
-                ]
-            ],            
-            [
-                'type' => 'email',
-                'label' => 'Monitored Email',
-                'required' => TRUE,
-                'user_meta_key' => 'tat_monitored_email'
-            ],
-            [
-                'type' => 'bodytext',
-                'text' =>  [
-                    'What other kinds of emails is it ok to send you at this address?'
-                ]
-            ],
-            [
-                'type' => 'checkbox',
-                'label' => 'Restaurant Outings',
-                'user_meta_key' => 'tat_outings_emails_ok'
-            ],
-            [
-                'type' => 'checkbox',
-                'label' => 'Seasonal Events',
-                'user_meta_key' => 'tat_event_emails_ok'
-            ],
-            [
-                'type' => 'checkbox',
-                'label' => 'Club Newsletter',
-                'user_meta_key' => 'tat_newsletter_emails_ok'
-            ],
-            [
-                'type' => 'checkbox',
-                'label' => 'New - Club Shop Listings',
-                'user_meta_key' => 'tat_shop_emails_ok'
             ]
-*/
         ];
     }
 
-    public static function render_membership_form_for_my_account() {
-        $form_elements = self::get_form_elements();
-        $current_user_id = get_current_user_id();
-        $things_that_need_fixing = [];
-
-        // Check for form posting and process it
-        if ( isset ( $_POST['pandamusrex_memberships_member_form_nonce'] ) ) {
-            $nonce = sanitize_text_field( wp_unslash( $_POST['pandamusrex_memberships_member_form_nonce'] ) );
-            if ( ! wp_verify_nonce( $nonce, 'pandamusrex_memberships_member_form_nonce' ) ) {
-                $things_that_need_fixing[] = "Bad nonce. Form submittal rejected.";
-            } else {
-                // Validate the POST contents
-                foreach ( $form_elements as $element ) {
-                    $type = "";
-                    if ( array_key_exists( 'type', $element ) ) {
-                        $type = $element[ 'type' ];
-                    }
-
-                    if ( empty( $type ) ) {
-                        continue;
-                    }
-
-                    $key = "";
-                    if ( array_key_exists( 'user_meta_key', $element ) ) {
-                        $key = $element[ 'user_meta_key' ];
-                    }
-
-                    if ( empty( $key ) ) {
-                        continue;
-                    }
-
-                    $required = FALSE;
-                    if ( array_key_exists( 'required', $element ) ) {
-                        $required = $element[ 'required' ];
-                    }
-
-                    $label = "(Missing label in form)";
-                    if ( array_key_exists( 'label', $element ) ) {
-                        $label = $element[ 'label' ];
-                    }
-
-                    if ( ! array_key_exists( $key, $_POST ) && $required ) {
-                        $things_that_need_fixing[] = "Required: " . $label;
-                        continue;
-                    }
-
-                    $new_value = sanitize_text_field( $_POST[ $key ] );
-                    $new_value = trim( $new_value );
-                    if ( empty( $new_value ) && $required ) {
-                        $things_that_need_fixing[] = "Non-empty value required: " . $label;
-                        continue;
-                    }
-
-                    if ( $type == "email") {
-                        if ( ! is_email( $new_value ) ) {
-                            $things_that_need_fixing[] = "Valid email required: " . $label;
-                            continue;
-                        }
-                    }
-                } // foreach, validation
-            }
-
-            if ( ! empty( $things_that_need_fixing ) ) {
-                // Display anything the user needs to fix
-                foreach ( $things_that_need_fixing as $thing_that_needs_fixing ) {
-                    echo "<p class='pandamusrex-tiesandtails-error'>";
-                    echo $thing_that_needs_fixing;
-                    echo "</p>";
-                }
-            } else {
-                // Everything is OK. Save it.
-                foreach ( $form_elements as $element ) {
-                    $type = "";
-                    if ( array_key_exists( 'type', $element ) ) {
-                        $type = $element[ 'type' ];
-                    }
-
-                    if ( empty( $type ) ) {
-                        continue;
-                    }
-
-                    $key = "";
-                    if ( array_key_exists( 'user_meta_key', $element ) ) {
-                        $key = $element[ 'user_meta_key' ];
-                    }
-
-                    if ( empty( $key ) ) {
-                        continue;
-                    }
-
-                    if ( array_key_exists( $key, $_POST ) ) {
-                        $new_value = sanitize_text_field( $_POST[ $key ] );
-                        $new_value = trim( $new_value );
-
-                        // Checkbox? Store TRUE instead
-                        if ( $type == 'checkbox' ) {
-                            $new_value = 'TRUE';
-                        }
-
-                        update_user_meta( $current_user_id, $key, $new_value );
-                    } else {
-                        // Not present? Checkbox? Delete the meta value
-                        if ( $type == 'checkbox' ) {
-                            delete_user_meta( $current_user_id, $key );
-                        }
-                    }
-                } // foreach, saving meta
-
-                echo "<p class='pandamusrex-tiesandtails-success'>";
-                echo "Form changes applied successfully";
-                echo "</p>";
-            }
-        }
-
-        self::render_form_elements();
-    }
-
     public static function render_membership_form_for_checkout() {
-        // TODO set a class to prompt JS to manage checking and POST
-        self::render_form_elements( [ 'omit-submit-button' ] );
-    }
-
-    public static function render_form_elements( $options = [] ) {
         $form_elements = self::get_form_elements();
 
         echo "<form method='post'>";
@@ -567,13 +334,6 @@ class PandamusRex_TiesAndTails_Member_Form {
                 echo "</p>";
                 continue;
             }
-        }
-
-        if ( ! in_array( 'omit-submit-button', $options ) ) {
-            echo "<p>";
-            echo "Once you hit Submit you\'re all done!";
-            echo "</p>";
-            echo "<input type='submit' id='pandamusrex_memberships_membership_form_submit' value='Submit'>";
         }
 
         echo "</form>";
