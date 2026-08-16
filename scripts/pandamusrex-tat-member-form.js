@@ -1,7 +1,10 @@
 jQuery( document ).ready( function( $ ) {
-    console.log( "TiesAndTails Member Form Helper. DOM is fully loaded and ready!" );
-
     var $dialog = $('#tat-terms-modal');
+    if ( ! $dialog.length ) {
+        return;
+    }
+
+    console.log( "TiesAndTails Member Form Helper. Dialog found." );
 
     function update_submit_button_state() {
         $all_checkboxes_checked = true;
