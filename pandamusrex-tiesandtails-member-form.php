@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: PandamusRex Ties and Tails Member Form
- * Version: 1.0.0
+ * Version: 1.1.0
  * Plugin URI: https://github.com/pandamusrex/pandamusrex-tiesandtails-member-form
  * Description: Custom member form for tiesandtails.club
  * Author: PandamusRex
@@ -17,7 +17,7 @@
  *
  * @package WordPress
  * @author PandamusRex
- * @since 1.0.0
+ * @since 1.1.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -71,7 +71,7 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form',
             plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-member-form.js',
             [ 'jquery' ],
-            '1.0.0',
+            '1.1.0',
             false
         );
 

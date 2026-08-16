@@ -9,9 +9,15 @@ jQuery( document ).ready( function( $ ) {
     function update_submit_button_state() {
         $all_checkboxes_checked = true;
 
+        console.log( '***' );
+
         $( '#tat-terms-modal input[type="checkbox"]' ).each( function() {
+            $checkbox_name = $( this ).attr( 'name' );
             if ( ! $( this ).is( ':checked' ) ) {
+                console.log( $checkbox_name, 'is NOT checked' );
                 $all_checkboxes_checked = false;
+            } else {
+                console.log( $checkbox_name, 'is checked' );
             }
         } );
 
