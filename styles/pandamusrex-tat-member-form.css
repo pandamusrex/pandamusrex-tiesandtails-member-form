@@ -14,6 +14,18 @@
     display: none;
 }
 
+.ui-dialog input {
+    margin: 3px 4px 3px 3px;
+}
+
+.ui-dialog p {
+    font-size: 1.1em;
+}
+
+.ui-dialog button {
+    padding: 3px 10px 3px 10px;
+}
+
 .pandamusrex-tiesandtails-member-form-success {
     border: 2px solid green;
     padding: 8px;
