@@ -2,40 +2,35 @@
     max-width: 95% !important;
     max-height: 95% !important;
     box-sizing: border-box;
-}
 
-/* Ensure the inner scrollable content updates cleanly */
-.ui-dialog .ui-dialog-content {
-    overflow-y: auto;
-    box-sizing: border-box;
-}
+    .ui-dialog-titlebar-close {
+        display: none;
+    }
 
-.ui-dialog .ui-dialog-titlebar-close {
-    display: none;
-}
+    button {
+        padding: 3px 10px 3px 10px;
+    }
 
-.ui-dialog input {
-    margin: 3px 4px 3px 3px;
-}
+    #tat-terms-modal {
+        overflow-y: auto;
+        box-sizing: border-box;
 
-.ui-dialog p {
-    font-size: 1.1em;
-}
 
-.ui-dialog button {
-    padding: 3px 10px 3px 10px;
-}
+        input {
+            margin: 3px 4px 3px 3px;
+        }
 
-.pandamusrex-tiesandtails-member-form-success {
-    border: 2px solid green;
-    padding: 8px;
-    color: green;
-    font-weight: bold;
-}
+        p {
+            font-size: 16px;
+            font-family: Verdana,Arial,sans-serif;
+        }
 
-.pandamusrex-tiesandtails-member-form-error {
-    border: 2px solid red;
-    padding: 8px;
-    color: red;
-    font-weight: bold;
+        label {
+            font-size: 16px;
+        }
+
+        ol {
+            padding-left: 30px;
+        }
+    }
 }
