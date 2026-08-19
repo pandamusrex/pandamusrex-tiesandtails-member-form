@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: PandamusRex Ties and Tails Member Form
- * Version: 1.3.0
+ * Version: 1.4.0
  * Plugin URI: https://github.com/pandamusrex/pandamusrex-tiesandtails-member-form
  * Description: Custom member form for tiesandtails.club
  * Author: PandamusRex
@@ -71,7 +71,7 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form',
             plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-member-form.js',
             [ 'jquery' ],
-            '1.3.0',
+            '1.4.0',
             false
         );
 
@@ -79,15 +79,24 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form-styles',
             plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-member-form.css',
             [],
-            '1.3.0'
+            '1.4.0'
         );
     }
 
     public function memberships_checkout_content() {
+        // Don't display the terms and conditions form if a user is logged in
+        // If a user is logged in, that means they completed checkout sometime in the past
+        // since that's the only way users can create an account and that means
+        // they've already accepted the T and C.
+        if ( is_user_logged_in() ) {
+            return;
+        }
+
 ?>
         <div id='tat-terms-modal' title='Membership Terms and Conditions'>
             <form method='post'>
                 <h1>Hey everyone, welcome to the Club!</h1>
+                <p><b>Already a member? <a href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>">Click here to log in to your account</a></b></p>
                 <p>We've finally got our 501(c)7!</p>
                 <p>That means we can pool our money for events without owing taxes on the money we collect.</p>
                 <p>Unfortunately, the IRS has a lot of rules about this: basically, <i>we can only pool money from Club members</i>.</p>
