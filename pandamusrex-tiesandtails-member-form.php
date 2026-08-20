@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: PandamusRex Ties and Tails Member Form
- * Version: 1.4.0
+ * Version: 1.5.0
  * Plugin URI: https://github.com/pandamusrex/pandamusrex-tiesandtails-member-form
  * Description: Custom member form for tiesandtails.club
  * Author: PandamusRex
@@ -71,7 +71,7 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form',
             plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-member-form.js',
             [ 'jquery' ],
-            '1.4.0',
+            '1.5.0',
             false
         );
 
@@ -79,7 +79,7 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form-styles',
             plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-member-form.css',
             [],
-            '1.4.0'
+            '1.5.0'
         );
     }
 
@@ -100,15 +100,14 @@ class PandamusRex_TiesAndTails_Member_Form {
                 <p>We've finally got our 501(c)7!</p>
                 <p>That means we can pool our money for events without owing taxes on the money we collect.</p>
                 <p>Unfortunately, the IRS has a lot of rules about this: basically, <i>we can only pool money from Club members</i>.</p>
-                <p>Because of that, we need need three things from everyone who wants to attend events:</p>
+                <p>Because of that, we need need two things from everyone who wants to attend events:</p>
                 <ol>
                     <li>You'll need to declare yourself a member of the Social Group.</li>
-                    <li>You'll need to pay $1 for an annual membership.</li>
-                    <li>We need an email address for the Club <b><i>that you actually monitor</i></b></li>
+                    <li>We need an email address for the Club <b><i>that you actually monitor</i></b>.</li>
                 </ol>
                 <p>Just to be clear: weekly MeetUps, individually paid restaurant trips, and every other event are still free
-                    and open to anyone and everyone. Membership requirements *only apply to tax-free merchandise and
-                    events where we pool our money*.</p>
+                    and open to anyone and everyone. Membership requirements <i>only apply to tax-free merchandise and
+                    events where we pool our money</i>.</p>
                 <p>Sorry. it's the IRS.</p>
                 <p>The upside is we get great deals on group packages, venues, and events like Trick or Meat. No cramming
                     into the bar at Fogo like sardines!</p>
@@ -118,7 +117,7 @@ class PandamusRex_TiesAndTails_Member_Form {
 
                 <h1>Membership Qualification</h1>
                 <p>This section covers the IRS-required legalese of joining the Social Group.</p>
-                <p>The full Bylaws can be read here.</p>
+                <p>The full <a href="https://docs.google.com/document/d/1g8cAwpJ8pK2B8EeZxZOfhimDLxOjcS6vgjnEm0EOFm0/">Bylaws can be read here</a>.</p>
                 <h2>Non-Discrimination</h2>
                 <p>Membership is open to any person at least eighteen (18) years-old without regard to race,
                     religious creed, skin color, national origin, ancestry, physical disability, mental disability,
@@ -147,7 +146,7 @@ class PandamusRex_TiesAndTails_Member_Form {
 
                 <h2>Exclusionary Clauses</h2>
                 <p>Members of the following groups must have their applications reviewed before approval. Please
-                    Contact Us through one of the methods listed for more information.</p>
+                    Contact Us through the <a href="https://www.tiesandtails.club/contact-us/">Contact Page</a> for more information.</p>
 
                 <p>
                     <input type='checkbox' id='tat_no_hate_group' name='tat_no_hate_group' required />
