@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: PandamusRex Ties and Tails Member Form
- * Version: 1.5.0
+ * Version: 1.7.0
  * Plugin URI: https://github.com/pandamusrex/pandamusrex-tiesandtails-member-form
  * Description: Custom member form for tiesandtails.club
  * Author: PandamusRex
@@ -71,7 +71,7 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form',
             plugin_dir_url( __FILE__ ) . 'scripts/pandamusrex-tat-member-form.js',
             [ 'jquery' ],
-            '1.5.0',
+            '1.7.0',
             false
         );
 
@@ -79,24 +79,71 @@ class PandamusRex_TiesAndTails_Member_Form {
             'pandamusrex-tat-member-form-styles',
             plugin_dir_url( __FILE__ ) . 'styles/pandamusrex-tat-member-form.css',
             [],
-            '1.5.0'
+            '1.7.0'
         );
     }
 
     public function memberships_checkout_content() {
         // Don't display the terms and conditions form if a user is logged in
-        // If a user is logged in, that means they completed checkout sometime in the past
-        // since that's the only way users can create an account and that means
-        // they've already accepted the T and C.
+        // and has placed at least one order.
+
+        // If a user is logged in and has placed at least one order, that means
+        // they completed checkout sometime in the past and that means they've
+        // already accepted the T and C.
+
+        // Logged in users without at least one order should see the T and C
+        // form because that means the account was created for them - either
+        // by an admin or because another member bought them a ticket for an
+        // event (which creates an account for them automatically).
+
+        // Logged out users and guests should see the form (which includes a
+        // link to log in case they have an account already)
+
         if ( is_user_logged_in() ) {
-            return;
+            $user_id = get_current_user_id();
+
+            $orders = wc_get_orders( array(
+                'customer' => $user_id,
+                'limit'    => 1,
+                'return'   => 'ids',
+            ) );
+
+            if ( ! empty( $orders ) ) {
+                // User is logged in AND has placed an order at some point
+                // Don't show the form. Exit now.
+                return;
+            }
         }
 
 ?>
         <div id='tat-terms-modal' title='Membership Terms and Conditions'>
             <form method='post'>
                 <h1>Hey everyone, welcome to the Club!</h1>
-                <p><b>Already a member? <a href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>">Click here to log in to your account</a></b></p>
+                <p>
+<?php
+                $current_user = wp_get_current_user();
+                if ( 0 == $current_user->ID ) { // No one is logged in
+?>
+                    <b>Already a member?
+                        <a href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>">
+                            Click here to log in to your account
+                        </a>
+                    </b>
+<?php
+                } else { // Someone is logged in
+                    $display_name = $current_user->display_name;
+?>
+                    <b>Hello <?php echo esc_html( $display_name );?>
+                        (not <?php echo esc_html( $display_name );?>?
+                        <a href="<?php echo esc_url( wp_logout_url( get_permalink() ) ); ?>">
+                            Log out
+                        </a>
+                        )
+                    </b>
+<?php
+                }
+?>
+                </p>
                 <p>We've finally got our 501(c)7!</p>
                 <p>That means we can pool our money for events without owing taxes on the money we collect.</p>
                 <p>Unfortunately, the IRS has a lot of rules about this: basically, <i>we can only pool money from Club members</i>.</p>

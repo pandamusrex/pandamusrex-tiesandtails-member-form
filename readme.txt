@@ -4,7 +4,7 @@ Donate link: https://pandamusrex.com/
 Tags: woocommerce
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.5.0
+Stable tag: 1.7.0
 Requires PHP: 7.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,13 @@ Custom member form for tiesandtails.club
 No.
 
 == Changelog ==
+
+= 1.7.0 =
+* If the logged in user has never placed an order, that means the account was created for them
+* by an admin or someone buying them a ticket. Ask them to complete the form.
+
+= 1.6.0 =
+* Also display T and C form at checkout for logged in users with no orders
 
 = 1.5.0 =
 * Update form content
